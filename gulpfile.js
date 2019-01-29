@@ -34,9 +34,6 @@ gulp.task("ftp", function() {
 	console.log(blue + "Watching...", reset);
 
 	gulp.watch("api").on("change", function(event) {
-		conn.rmdir(remoteLocation, function(err){
-
-		});
 			console.log("Changed: " + green + event, reset);
 			return gulp
 				.src(localFiles, {base: "./", buffer: false})
