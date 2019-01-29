@@ -1,2 +1,1 @@
-<?php
-phpinfo();
+<h1>hello</h1>

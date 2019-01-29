@@ -1,61 +1,28 @@
-'use strict'
+const gulp = require("gulp");
+const ftp = require("vinyl-ftp");
 
-var gulp = require('gulp')
-var gutil = require('gulp-util')
-var ftp = require('vinyl-ftp')
+var localFiles = ["*.php"];
+var user = process.env.u + "@oliverrichman.uk";
+var password = process.env.p;
+const remoteLocation = "/";
 
-/** Configuration **/
-var user = process.env.FTP_USER
-var password = process.env.FTP_PWD
-var host = 'your hostname or ip address'
-var port = 21
-var localFilesGlob = ['./**/*']
-var remoteFolder = '/api'
-
-// helper function to build an FTP connection based on our configuration
 function getFtpConnection() {
-  return ftp.create({
-    host: host,
-    port: port,
-    user: user,
-    password: password,
-    parallel: 5,
-    log: gutil.log,
-  })
+	return ftp.create({
+		host: "oliverrichman.uk",
+		port: 21,
+		user: user,
+		password: password
+	});
 }
 
-/**
- * Deploy task.
- * Copies the new files to the server
- *
- * Usage: `FTP_USER=someuser FTP_PWD=somepwd gulp ftp-deploy`
- */
-gulp.task('ftp-deploy', function() {
-  var conn = getFtpConnection()
+gulp.task("ftp", function() {
+	var conn = getFtpConnection();
+	gulp.watch("**/*.php").on("change", function(event) {
+		console.log("Uploaded: ", event);
 
-  return gulp
-    .src(localFilesGlob, { base: '.', buffer: false })
-    .pipe(conn.newer(remoteFolder)) // only upload newer files
-    .pipe(conn.dest(remoteFolder))
-})
-
-/**
- * Watch deploy task.
- * Watches the local copy for changes and copies the new files to the server whenever an update is detected
- *
- * Usage: `FTP_USER=someuser FTP_PWD=somepwd gulp ftp-deploy-watch`
- */
-gulp.task('ftp', function() {
-  var conn = getFtpConnection()
-
-  gulp.watch(localFilesGlob).on('change', function(event) {
-    console.log(
-      'Changes detected! Uploading file "' + event.path + '", ' + event.type
-    )
-
-    return gulp
-      .src([event.path], { base: '.', buffer: false })
-      .pipe(conn.newer(remoteFolder)) // only upload newer files
-      .pipe(conn.dest(remoteFolder))
-  })
-})
+		return gulp
+			.src(localFiles, {base: ".", buffer: false})
+			.pipe(conn.newer(remoteLocation))
+			.pipe(conn.dest(remoteLocation));
+	});
+});
