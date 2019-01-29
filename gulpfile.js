@@ -6,6 +6,8 @@ var user = process.env.u + "@oliverrichman.uk";
 var password = process.env.p;
 const remoteLocation = "/";
 
+//Command: u=[username] p=[password] gulp ftp
+
 function getFtpConnection() {
 	return ftp.create({
 		host: "oliverrichman.uk",
