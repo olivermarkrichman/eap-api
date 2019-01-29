@@ -3,8 +3,6 @@
 $urls = explode("/", $_SERVER['REQUEST_URI']);
 $reqUser = $urls[3];
 
-echo $reqUser;
-
 if (empty($reqUser)) {
     //No userID specified
     getAll();
@@ -12,5 +10,5 @@ if (empty($reqUser)) {
     //If numeric userID is specified
     getOne();
 } else {
-    //Invalid Request
+    invalidRequest();
 }
