@@ -1,14 +1,20 @@
 <?php
+	require("utils.php");
+	require("../api/requests/get.php");
 
-    $urls = explode("/", $_SERVER['REQUEST_URI']);
-    $endpoint = $urls[2];
+	$urls = explode("/", $_SERVER['REQUEST_URI']);
+     $endpoint = $urls[2];
 
-    switch ($endpoint) {
-        case 'users':
-        require("components/users.php");
-        break;
+	if (empty($endpoint)) {
+     	invalidRequest();
+	}
 
-        case 'clients':
-        echo "/clients";
-        break;
-    }
+     switch ($endpoint) {
+     	case 'users':
+          	require("components/users.php");
+     		break;
+
+     	default:
+          	invalidRequest();
+          	break;
+	}
