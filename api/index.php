@@ -1,1 +1,5 @@
-<h1>hello</h1>
+<?php
+    $urls = explode("/", $_SERVER['REQUEST_URI']);
+    $endpoint = $urls[2];
+
+    echo $endpoint;
