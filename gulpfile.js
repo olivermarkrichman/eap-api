@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const ftp = require("vinyl-ftp");
 
-var localFiles = ["*.php"];
+var localFiles = ["**/*.php", "*.php"];
 var user = process.env.u + "@oliverrichman.uk";
 var password = process.env.p;
 const remoteLocation = "/";
