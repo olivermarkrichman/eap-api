@@ -26,6 +26,7 @@ function getFtpConnection() {
 		password: password
 	});
 }
+
 gulp.task("ftp", function() {
 	var conn = getFtpConnection();
 
