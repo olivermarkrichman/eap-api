@@ -7,7 +7,8 @@ var green = "\x1b[32m";
 var magenta = "\x1b[35m";
 var blue = "\x1b[34m";
 
-var localFiles = ["**/*.php", "*.php"];
+// var localFiles = ["**/*.php","*.php","."];
+var localFiles = ["api/**/*.php","api/.*"];
 
 var host = "oliverrichman.uk";
 var port = 21;
@@ -25,7 +26,6 @@ function getFtpConnection() {
 		password: password
 	});
 }
-
 gulp.task("ftp", function() {
 	var conn = getFtpConnection();
 
@@ -34,11 +34,28 @@ gulp.task("ftp", function() {
 	console.log(blue + "Watching...", reset);
 
 	gulp.watch("api").on("change", function(event) {
-		console.log("Uploaded: " + green + event, reset);
+		conn.rmdir(remoteLocation, function(err){
 
+		});
+			console.log("Changed: " + green + event, reset);
+			return gulp
+				.src(localFiles, {base: "./", buffer: false})
+				.pipe(conn.newer(remoteLocation))
+				.pipe(conn.dest(remoteLocation));
+				//.pipe(conn.clean(["**/*", "*", "!node_modules/**"], "../", {base: "./*.*"}));
+	});
+});
+
+gulp.task('reload',function (cb){
+	var conn = getFtpConnection();
+	conn.rmdir(remoteLocation, function(err){
+		cb();
+		console.log("Cleaned...");
+		console.log("Reloaded");
 		return gulp
-			.src(localFiles, {base: ".", buffer: false})
+			.src(localFiles, {base: "./", buffer: false})
 			.pipe(conn.newer(remoteLocation))
 			.pipe(conn.dest(remoteLocation));
 	});
-});
+})
+gulp.task("default", gulp.series('ftp'));
