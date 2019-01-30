@@ -1,6 +1,6 @@
 <?php
 
-function getOne()
+function getOne($endpoint,$endpointId)
 {
-    echo "got one";
+    echo "Get ID ".$endpointId. " from ". $endpoint;
 }
