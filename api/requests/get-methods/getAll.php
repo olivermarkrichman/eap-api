@@ -1,6 +1,6 @@
 <?php
 
-function getAll()
+function getAll($endpoint)
 {
-    echo "got all";
+    echo "Get all ".$endpoint;
 }
