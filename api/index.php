@@ -4,6 +4,7 @@
 	$_POST= json_decode($rest_json, true);
 
 	require("utils.php");
+	require("../api/requests/login-register.php");
 	require("../api/requests/get.php");
 	require("../api/requests/create.php");
 	require("../api/requests/update.php");
@@ -15,6 +16,7 @@
 	$endpointId = $urls[3];
 
 	$validEndpoints = [
+		"login",
 		"users",
 		"clients",
 		"plans",
@@ -30,6 +32,11 @@
 	if (!in_array($endpoint,$validEndpoints)){
 		//Not a valid endpoint
 		invalidRequest();
+	}
+
+	if ($endpoint === 'login'){
+		login();
+		return;
 	}
 
 	if (empty($endpointId)) {
