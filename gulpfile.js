@@ -16,7 +16,7 @@ var user = process.env.u + "@oliverrichman.uk";
 var password = process.env.p;
 const remoteLocation = "/";
 
-//Command: u=[username] p=[password] gulp ftp
+//COMMAND: u=[username] p=[password] gulp ftp
 
 function getFtpConnection() {
 	return ftp.create({
@@ -40,7 +40,6 @@ gulp.task("ftp", function() {
 				.src(localFiles, {base: "./", buffer: false})
 				.pipe(conn.newer(remoteLocation))
 				.pipe(conn.dest(remoteLocation));
-				//.pipe(conn.clean(["**/*", "*", "!node_modules/**"], "../", {base: "./*.*"}));
 	});
 });
 
