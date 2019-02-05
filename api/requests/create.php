@@ -5,6 +5,9 @@
 			case 'users':
 				createUsers();
 				break;
+			case 'clients':
+				createClients();
+				break;
 			default:
 				invalidRequest();
 				break;
@@ -14,12 +17,11 @@
 	function createUsers() {
 		connect(function($pdo){
 			if (isMultiArray($_POST)){
-				foreach ($_POST as $user) {
-					$data = $user;
+				foreach ($_POST as $data) {
 					$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email) VALUES (?,?,?)");
 					$q->bind_param("sss",$data['first_name'],$data['last_name'],$data['email']);
 					if ($q->execute()){
-						response(201,"Created User");
+						$createdUserCount++;
 					}
 				}
 			} else {
@@ -27,9 +29,38 @@
 				$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email) VALUES (?,?,?)");
 				$q->bind_param("sss",$data['first_name'],$data['last_name'],$data['email']);
 				if ($q->execute()){
-					response(201,"Created User");
+					$createdUserCount++;
 				}
 
+			}
+			if ($createdUserCount){
+				response(201,"Created ".$createdUserCount." User(s)");
+			}
+			$q->close();
+		});
+	}
+
+	function createClients() {
+		connect(function($pdo){
+			if (isMultiArray($_POST)){
+				foreach ($_POST as $data) {
+					$q = $pdo->prepare("INSERT INTO clients (name, owner) VALUES (?,?)");
+					$q->bind_param("si",$data['name'],$data['owner']);
+					if ($q->execute()){
+						$createdClientCount++;
+					}
+				}
+			} else {
+				$data = $_POST;
+				$q = $pdo->prepare("INSERT INTO clients (name, owner) VALUES (?,?)");
+				$q->bind_param("si",$data['name'],$data['owner']);
+				if ($q->execute()){
+					$createdClientCount++;
+				}
+
+			}
+			if ($createdClientCount){
+				response(201,"Created ".$createdClientCount." Client(s)");
 			}
 			$q->close();
 		});

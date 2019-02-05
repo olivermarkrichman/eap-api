@@ -6,11 +6,7 @@ function connect($callback) {
 	require("dbInfo.php");
 	try {
 		$pdo = new mysqli($dbInfo['host'],$dbInfo['user'], $dbInfo['password'],$dbInfo['db']);
-
 		$callback($pdo);
-
-
-
 	} catch(PDOException $e) {
 		echo "Connection failed: " . $e->getMessage();
 	}
