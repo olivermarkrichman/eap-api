@@ -41,7 +41,6 @@
 			    	break;
 			case "get":
 				//Get all
-				// echo "test";
 		 		getAll($endpoint);
 				break;
 			default:
