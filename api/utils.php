@@ -21,6 +21,24 @@ function response($code, $message){
     }
 }
 
+function authorise($headers){
+	$auth = $headers['Authorization'];
+	if (strpos( $auth, "EAP" ) !== false){
+		$token = explode(" ",$auth);
+		$token = "'".$token[1]."'";
+		connect($token,function($token,$pdo){
+			$q = "SELECT `id` FROM `users` WHERE `token` = ".$token;
+			$res = $pdo->query($q);
+			if (!$res->fetch_assoc()['id']){
+				response(401, "Invalid Token");
+			}
+
+		});
+	} else {
+		response(401, "Invalid Token");
+	}
+}
+
 function invalidRequest(){
     response(400, "Invalid Request");
 }
@@ -32,4 +50,8 @@ function isMultiArray($array){
 		}
 		return false;
 	}
+}
+
+function generateToken() {
+	return md5(uniqid());
 }

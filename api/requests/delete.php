@@ -12,5 +12,6 @@ function deleteItem($endpoint,$endpointId){
 		} else {
 		    response(404, "Record not found");
 		}
+		
 	});
 }

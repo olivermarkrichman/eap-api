@@ -2,9 +2,10 @@
 
 	$rest_json = file_get_contents("php://input");
 	$_POST= json_decode($rest_json, true);
+	$headers = getallheaders();
 
 	require("utils.php");
-	require("../api/requests/login-register.php");
+	require("../api/requests/login.php");
 	require("../api/requests/get.php");
 	require("../api/requests/create.php");
 	require("../api/requests/update.php");
@@ -24,6 +25,17 @@
 		"venues"
 	];
 
+	if ($endpoint === 'login'){
+		if ($request === 'post'){
+			login();
+		} else {
+			invalidRequest();
+		}
+		return;
+	}
+
+	authorise($headers);
+
 	if (empty($endpoint)) {
 		//No endpoint specified
      	invalidRequest();
@@ -32,11 +44,6 @@
 	if (!in_array($endpoint,$validEndpoints)){
 		//Not a valid endpoint
 		invalidRequest();
-	}
-
-	if ($endpoint === 'login'){
-		login();
-		return;
 	}
 
 	if (empty($endpointId)) {
@@ -63,6 +70,7 @@
 				break;
 			case "put":
 				//Update by ID
+				updateItem($endpoint,$endpointId);
 				break;
 			case "delete":
 				//Delete by ID

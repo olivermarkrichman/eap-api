@@ -4,7 +4,7 @@
 		if (!empty($_POST)){
 			switch ($endpoint){
 				case 'users':
-					$requiredFields = ['first_name','last_name','email','password'];
+					$requiredFields = ['first_name','last_name','email','password','type'];
 					createUsers($requiredFields);
 					break;
 				case 'clients':
@@ -14,6 +14,8 @@
 					invalidRequest();
 					break;
 			}
+		} else {
+			response(409, "You need to send valid JSON data");
 		}
 	}
 
@@ -31,8 +33,10 @@
 						if ($res->num_rows > 0) {
 							response(409,"email is already registered");
 						} else {
-							$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email) VALUES (?,?,?)");
-							$q->bind_param("sss",$data['first_name'],$data['last_name'],$data['email']);
+							$now = time();
+							$token = strtoupper(generateToken());
+							$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email,created_at,token,type) VALUES (?,?,?,?,?,?)");
+							$q->bind_param("sssisi",$data['first_name'],$data['last_name'],$data['email'],$now,$token,$data['type']);
 							if ($q->execute()){
 								$newId = $q->insert_id;
 								$q = $pdo->prepare("INSERT INTO passwords (user_id, password) VALUES (?,?)");
@@ -50,21 +54,30 @@
 							response(409, $requiredField . " is blank");
 						}
 					}
-					$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email) VALUES (?,?,?)");
-					$q->bind_param("sss",$data['first_name'],$data['last_name'],$data['email']);
-					if ($q->execute()){
-						$newId = $q->insert_id;
-						$q = $pdo->prepare("INSERT INTO passwords (user_id, password) VALUES (?,?)");
-						$q->bind_param("ss",$newId,password_hash($data['password'],PASSWORD_DEFAULT));
+					$q = "SELECT id FROM users WHERE email = '".$data['email']."'";
+					$res = $pdo->query($q);
+					if ($res->num_rows > 0) {
+						response(409,"email is already registered");
+					} else {
+						$now = time();
+						$token = strtoupper(generateToken());
+						$q = $pdo->prepare("INSERT INTO users (first_name, last_name, email,created_at,token,type) VALUES (?,?,?,?,?,?)");
+						$q->bind_param("sssisi",$data['first_name'],$data['last_name'],$data['email'],$now,$token,$data['type']);
 						if ($q->execute()){
-							$createdUserCount++;
+							$newId = $q->insert_id;
+							$q = $pdo->prepare("INSERT INTO passwords (user_id, password) VALUES (?,?)");
+							$q->bind_param("ss",$newId,password_hash($data['password'],PASSWORD_DEFAULT));
+							if ($q->execute()){
+								$createdUserCount++;
+							}
+						} else {
 						}
 					}
 				}
 			if ($createdUserCount){
 				response(201,"Created ".$createdUserCount." User(s)");
 			}
-			$q->close();
+
 		});
 	}
 
@@ -90,7 +103,7 @@
 		// 	if ($createdClientCount){
 		// 		response(201,"Created ".$createdClientCount." Client(s)");
 		// 	}
-		// 	$q->close();
+		//
 		// });
 	}
 

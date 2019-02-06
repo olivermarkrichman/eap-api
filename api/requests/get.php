@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['fields'] = [
-	users=>['id','first_name','last_name','email'],
+	users=>['id','first_name','last_name','email','type','permissions'],
 	clients=>['id','name','owner','logo','colour']
 ];
 
@@ -16,12 +16,8 @@ function getOne($endpoint,$endpointId){
 		$q = "SELECT ".$fields." FROM ".$d['endpoint']." WHERE id = ".$d['endpointId'];
 		$res = $pdo->query($q);
 		if ($res->num_rows > 0) {
-			$data = [];
-		    	while($row = $res->fetch_assoc()) {
-				array_push($data,$row);
-			}
 			header("Content-Type: application/json");
-           	echo json_encode($data);
+           	echo json_encode($res->fetch_assoc());
 		}
 	});
 }
