@@ -11,19 +11,21 @@ function login() {
 				$res = $pdo->query($q);
 				$hash = $res->fetch_assoc()['password'];
 				if (password_verify($_POST['password'], $hash)){
-					response(200,"You are now logged in");
+					$q = "SELECT * FROM users WHERE id = ".$userId;
+					$res = $pdo->query($q);
+					if ($res->num_rows > 0) {
+						header("Content-Type: application/json");
+			           	echo json_encode($res->fetch_assoc());
+					}
 				} else {
 					response(401, "Incorrect email or password");
 				}
 			} else {
 				response(401, "Incorrect email or password");
 			}
+
 		});
 	} else {
 		response(401, "Incorrect email or password");
 	}
-}
-
-function register() {
-
 }
