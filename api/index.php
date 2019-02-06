@@ -19,10 +19,6 @@
 	$validEndpoints = [
 		"login",
 		"users",
-		"clients",
-		"plans",
-		"events",
-		"venues"
 	];
 
 	if ($endpoint === 'login'){

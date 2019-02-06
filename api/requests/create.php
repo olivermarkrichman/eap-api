@@ -7,9 +7,6 @@
 					$requiredFields = ['first_name','last_name','email','password','type'];
 					createUsers($requiredFields);
 					break;
-				case 'clients':
-					createClients();
-					break;
 				default:
 					invalidRequest();
 					break;
@@ -80,31 +77,3 @@
 
 		});
 	}
-
-	function createClients() {
-		// connect(function($pdo){
-		// 	if (isMultiArray($_POST)){
-		// 		foreach ($_POST as $data) {
-		// 			$q = $pdo->prepare("INSERT INTO clients (name, owner) VALUES (?,?)");
-		// 			$q->bind_param("si",$data['name'],$data['owner']);
-		// 			if ($q->execute()){
-		// 				$createdClientCount++;
-		// 			}
-		// 		}
-		// 	} else {
-		// 		$data = $_POST;
-		// 		$q = $pdo->prepare("INSERT INTO clients (name, owner) VALUES (?,?)");
-		// 		$q->bind_param("si",$data['name'],$data['owner']);
-		// 		if ($q->execute()){
-		// 			$createdClientCount++;
-		// 		}
-		//
-		// 	}
-		// 	if ($createdClientCount){
-		// 		response(201,"Created ".$createdClientCount." Client(s)");
-		// 	}
-		//
-		// });
-	}
-
- ?>

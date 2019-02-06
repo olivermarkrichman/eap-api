@@ -2,7 +2,7 @@
 
 $GLOBALS['fields'] = [
 	users=>['id','first_name','last_name','email','type','permissions'],
-	clients=>['id','name','owner','logo','colour']
+	clients=>['id','name','owner','logo','colour'],
 ];
 
 function getOne($endpoint,$endpointId){
