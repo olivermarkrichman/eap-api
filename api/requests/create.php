@@ -36,7 +36,7 @@
 							if ($q->execute()){
 								$newId = $q->insert_id;
 								$q = $pdo->prepare("INSERT INTO passwords (user_id, password) VALUES (?,?)");
-								$q->bind_param("ss",$newId,password_hash($data['password'],PASSWORD_DEFAULT));
+								$q->bind_param("is",$newId,password_hash($data['password'],PASSWORD_DEFAULT));
 								if ($q->execute()){
 									$createdUserCount++;
 								}

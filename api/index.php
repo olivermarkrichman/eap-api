@@ -66,6 +66,7 @@
 				break;
 			case "delete":
 				//Delete by ID
+				deleteItem($endpoint, $endpointId);
 				break;
 			default:
 				invalidRequest();
