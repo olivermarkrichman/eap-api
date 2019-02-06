@@ -7,9 +7,6 @@ function updateItem($endpoint,$endpointId) {
 				$acceptedFields = ['first_name','last_name','email','type','permissions'];
 				updateUser($acceptedFields,$endpointId);
 				break;
-			case 'clients':
-				updateClient();
-				break;
 			default:
 				invalidRequest();
 				break;
