@@ -18,14 +18,14 @@ function login() {
 			           	echo json_encode($res->fetch_assoc());
 					}
 				} else {
-					response(401, "Incorrect email or password");
+					response(401, "Invalid Email/Password");
 				}
 			} else {
-				response(401, "Incorrect email or password");
+				response(401, "Invalid Email/Password");
 			}
 
 		});
 	} else {
-		response(401, "Incorrect email or password");
+		response(401, "Invalid Email/Password");
 	}
 }
