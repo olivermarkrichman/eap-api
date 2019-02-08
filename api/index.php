@@ -1,82 +1,76 @@
 <?php
+    require("core/connect.php");
+    require("core/utils.php");
 
-	$rest_json = file_get_contents("php://input");
-	$_POST= json_decode($rest_json, true);
-	$headers = getallheaders();
+    $rest_json = file_get_contents("php://input");
+    $_POST = json_decode($rest_json, true);
+    $urls = explode("/", $_SERVER['REQUEST_URI']);
+    $request = strtolower($_SERVER['REQUEST_METHOD']);
+    $query_string = $_SERVER['QUERY_STRING'];
+    $endpoint = array_key_exists(2, $urls) ? explode("?", $urls[2])[0] : null;
+    $endpoint_id = array_key_exists(3, $urls) ? explode("?", $urls[3])[0] : null;
+    $GLOBALS['query_string_array'] = explode("&", $query_string);
+    $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
 
-	require("utils.php");
-	require("../api/requests/login.php");
-	require("../api/requests/get.php");
-	require("../api/requests/create.php");
-	require("../api/requests/update.php");
-	require("../api/requests/delete.php");
+    $valid_endpoints = [
+        'clients',
+        'events',
+        'incidents',
+        'skills',
+        'users',
+        'venues'
+    ];
 
-	$urls = explode("/", $_SERVER['REQUEST_URI']);
-	$request = strtolower($_SERVER['REQUEST_METHOD']);
-     $endpoint = $urls[2];
-	$endpointId = $urls[3];
+    if ($endpoint === "login") {
+        require("methods/login.php");
+        return;
+    }
 
-	$validEndpoints = [
-		"login",
-		"users",
-	];
+    if (!$endpoint) {
+        invalid_request();
+    }
 
-	if ($endpoint === 'login'){
-		if ($request === 'post'){
-			login();
-		} else {
-			invalidRequest();
-		}
-		return;
-	}
+    if (!in_array($endpoint, $valid_endpoints)) {
+        invalid_request();
+    }
 
-	authorise($headers);
+    if (!$endpoint_id) {
+        switch ($request) {
+            case 'get':
+                //Get all from specified endpoint.
+                require("methods/get-all.php");
+                break;
 
-	if (empty($endpoint)) {
-		//No endpoint specified
-     	invalidRequest();
-	}
+            case 'post':
+                //Create new item(s) for specified endpoint.
+                require("methods/post.php");
+                break;
 
-	if (!in_array($endpoint,$validEndpoints)){
-		//Not a valid endpoint
-		invalidRequest();
-	}
+            default:
+                invalid_request();
+                break;
+        }
+    } elseif (is_numeric($endpoint_id)) {
+        switch ($request) {
+            case 'get':
+                //Get item by ID from specified endpoint.
+                require("methods/get-one.php");
+                break;
 
-	if (empty($endpointId)) {
-		//No ID specified
-		switch ($request){
-			case "post":
-				//Create new
-				create($endpoint);
-			    	break;
-			case "get":
-				//Get all
-		 		getAll($endpoint);
-				break;
-			default:
-				invalidRequest();
-				break;
-		}
-	} elseif (is_numeric($endpointId)) {
-	    	//If numeric ID is specified
-		switch ($request){
-			case "get":
-				//Get by ID
-				getOne($endpoint, $endpointId);
-				break;
-			case "put":
-				//Update by ID
-				updateItem($endpoint,$endpointId);
-				break;
-			case "delete":
-				//Delete by ID
-				deleteItem($endpoint, $endpointId);
-				break;
-			default:
-				invalidRequest();
-				break;
-		}
-	} else {
-		//If the endpointId value isn't numeric
-		invalidRequest();
-	}
+            case 'put':
+                //Edit item by ID from specified endpoint.
+                require("methods/edit.php");
+                break;
+
+            case 'delete':
+                //Delete item by ID from specified endpoint.
+                require("methods/delete.php");
+                break;
+
+            default:
+                invalid_request();
+                break;
+        }
+    } else {
+        invalid_request();
+    }
