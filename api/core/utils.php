@@ -30,6 +30,24 @@ function response($code, $message, $db_error = false, $data = false)
     }
 }
 
+function authorise($headers)
+{
+    $auth = $headers['Authorization'];
+    if (strpos($auth, "EAP") !== false) {
+        $token = explode(" ", $auth);
+        $token = "'".$token[1]."'";
+        connect($token, function ($token, $conn) {
+            $q = "SELECT `id` FROM `users` WHERE `token` = ".$token;
+            $res = $conn->query($q);
+            if (!$res->fetch_assoc()['id']) {
+                response(401, "Invalid Token");
+            }
+        });
+    } else {
+        response(401, "Invalid Token");
+    }
+}
+
 function invalid_request()
 {
     response(400, "Invalid request, please try again.");

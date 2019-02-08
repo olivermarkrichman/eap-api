@@ -2,6 +2,7 @@
     require("core/connect.php");
     require("core/utils.php");
 
+    $headers = getallheaders();
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);
     $urls = explode("/", $_SERVER['REQUEST_URI']);
@@ -25,6 +26,8 @@
         require("methods/login.php");
         return;
     }
+
+    authorise($headers);
 
     if (!$endpoint) {
         invalid_request();
