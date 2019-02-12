@@ -39,6 +39,7 @@ function authorise($headers)
         connect($token, function ($token, $conn) {
             $q = "SELECT `id` FROM `users` WHERE `token` = ".$token;
             $res = $conn->query($q);
+            $GLOBALS['token'] = $token;
             if (!$res->fetch_assoc()['id']) {
                 response(401, "Invalid Token");
             }

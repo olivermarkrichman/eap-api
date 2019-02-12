@@ -29,6 +29,11 @@
 
     authorise($headers);
 
+    if ($endpoint === "me") {
+        require("methods/me.php");
+        return;
+    }
+
     if (!$endpoint) {
         invalid_request();
     }
