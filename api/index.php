@@ -27,6 +27,11 @@
         return;
     }
 
+    // if ($endpoint === "upload-image") {
+    //     require("upload-image.php");
+    //     die();
+    // }
+
     authorise($headers);
 
     if ($endpoint === "me") {
@@ -43,6 +48,11 @@
             }
             return;
         }
+    }
+
+    if ($endpoint === "upload") {
+        require("methods/upload.php");
+        return;
     }
 
     if (!$endpoint) {
