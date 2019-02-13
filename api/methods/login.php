@@ -8,7 +8,7 @@ connect($d, function ($d, $conn) {
     if (!$data['password']) {
         response(400, "Password cannot be blank.");
     }
-    $q = "SELECT " . $GLOBALS['get_fields']['users'] . " FROM users WHERE email = '" . $data['email'] . "'";
+    $q = "SELECT * FROM users WHERE email = '" . $data['email'] . "'";
     $res = $conn->query($q);
     if ($res->num_rows > 0) {
         $user = $res->fetch_assoc();

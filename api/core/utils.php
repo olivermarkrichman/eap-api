@@ -5,7 +5,7 @@ $GLOBALS['get_fields'] = [
     "events" => ['id','name','venue','eap','start_time','end_time','away_team','notes'],
     "incidents" => ['id','name','required_skills','preferred_skills'],
     "skills" => ['id','name','description'],
-    "users" => ['id','first_name','last_name','email','level','permissions','skills'],
+    "users" => ['id','first_name','last_name','email','level','permissions','skills','profile_img'],
     "venues" => ['id','name','first_line','second_line','city','county','postcode','contact_email','contact_number']
 ];
 
