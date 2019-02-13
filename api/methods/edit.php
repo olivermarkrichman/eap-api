@@ -18,7 +18,7 @@ switch ($endpoint) {
         break;
 
     case 'users':
-        $accepted_fields = ['first_name','last_name','email','level','permissions','skills'];
+        $accepted_fields = ['first_name','last_name','email','level','permissions','skills','profile_img'];
         break;
 
     case 'venues':

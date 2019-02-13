@@ -34,7 +34,7 @@
 
         case 'users':
             $required_fields = ['first_name','last_name','email','level'];
-            $accepted_fields = ['first_name','last_name','email','level','permissions','skills'];
+            $accepted_fields = ['first_name','last_name','email','level','permissions','skills','profile_img'];
             $check_fields = ['email'];
             $requirements = ['date_added','token'];
             is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);

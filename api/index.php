@@ -30,8 +30,19 @@
     authorise($headers);
 
     if ($endpoint === "me") {
-        require("methods/me.php");
-        return;
+        if ($request === "get") {
+            require("methods/me.php");
+            getMe();
+            return;
+        } elseif ($request === "put") {
+            if (array_key_exists('current_client', $_POST) && !empty($_POST['current_client'])) {
+                require("methods/me.php");
+                updateMe($_POST['current_client']);
+            } else {
+                response(400, "You need to send a current_client");
+            }
+            return;
+        }
     }
 
     if (!$endpoint) {
