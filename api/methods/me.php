@@ -10,11 +10,11 @@ function getMe()
             // header("Content-Type: application/json");
             // echo json_encode($res->fetch_assoc());
             $user = $res->fetch_assoc();
-            if ($user['current_client']) {
-                $q = "SELECT * FROM clients WHERE id = " . $user['current_client'];
+            if ($user['client']) {
+                $q = "SELECT * FROM clients WHERE id = " . $user['client'];
                 $res = $conn->query($q);
                 if ($res->num_rows > 0) {
-                    $user['current_client'] = $res->fetch_assoc();
+                    $user['client'] = $res->fetch_assoc();
                     header("Content-Type: application/json");
                     echo json_encode($user);
                 } else {
