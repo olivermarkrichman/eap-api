@@ -64,7 +64,7 @@
             }
 
             if ($created_client && $created_password) {
-                response(201, "Successfully created");
+                response(201, "Successfully created", false, ["token"=>$d['data']['token']]);
             }
         } else {
             response(500, "Failed to create user", $conn->error);
