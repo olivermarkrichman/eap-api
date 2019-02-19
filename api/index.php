@@ -27,6 +27,11 @@
         return;
     }
 
+    if ($endpoint === "register") {
+        require("methods/register.php");
+        return;
+    }
+
     // if ($endpoint === "upload-image") {
     //     require("upload-image.php");
     //     die();
