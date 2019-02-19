@@ -51,7 +51,13 @@
             //create client
             $q = "INSERT INTO `clients` (`name`,`owner`) VALUES ('" . $d['data']['company_name'] . "', " . $new_id . ")";
             if ($conn->query($q) === true) {
-                $created_client = true;
+                $client_id = $conn->insert_id;
+                $q = "UPDATE `users` SET `client` = " . $client_id . " WHERE id = ".$new_id;
+                if ($conn->query($q)) {
+                    $created_client = true;
+                } else {
+                    response(500, "Failed to update user client", $conn->error);
+                }
             } else {
                 response(500, "Failed to create client", $conn->error);
             }
@@ -60,7 +66,7 @@
             if ($conn->query($q) === true) {
                 $created_password = true;
             } else {
-                response(500, "Failed to create client", $conn->error);
+                response(500, "Failed to create password", $conn->error);
             }
 
             if ($created_client && $created_password) {
