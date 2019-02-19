@@ -8,7 +8,7 @@ var magenta = "\x1b[35m";
 var blue = "\x1b[34m";
 
 // var localFiles = ["**/*.php","*.php","."];
-var localFiles = ["api/**/*.php","api/.*"];
+var localFiles = ["api/**/*.php","api/.*","vendor/**/*.*","composer.json","composer.lock"];
 
 var host = "oliverrichman.uk";
 var port = 21;
