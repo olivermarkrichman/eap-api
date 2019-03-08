@@ -2,6 +2,13 @@
     require("core/connect.php");
     require("core/utils.php");
 
+// TO DO LIST FOR EAP API:
+// - Change password
+// - Client logo uploads (POSSIBLY DONE - NEED TESTING)
+// - DELETE USER (AS USER) - NEEDS TESTING
+// - MAIL SHIT
+
+
     $GLOBALS['original_post'] = $_POST;
     $headers = getallheaders();
     $rest_json = file_get_contents("php://input");
