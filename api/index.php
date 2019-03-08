@@ -2,6 +2,7 @@
     require("core/connect.php");
     require("core/utils.php");
 
+    $GLOBALS['original_post'] = $_POST;
     $headers = getallheaders();
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);
@@ -31,11 +32,6 @@
         require("methods/register.php");
         return;
     }
-
-    // if ($endpoint === "upload-image") {
-    //     require("upload-image.php");
-    //     die();
-    // }
 
     authorise($headers);
 
