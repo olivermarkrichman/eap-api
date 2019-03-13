@@ -6,19 +6,29 @@ $d = [
     "fields"=> $GLOBALS['get_fields'][$endpoint]
 ];
 
-
-// if ($GLOBALS['query_string_array']) {
-// 	foreach ($GLOBALS['query_string_array'] as $query) {
-// 		$query_split = explode("=", $query);
-// 		$query_key = array_key_exists(0, $query_split) ? $query_split[0] : null;
-// 		$query_value = array_key_exists(1, $query_split) ? $query_split[1] : null;
-// 	}
-// }
-
 connect($d, function ($d, $conn) {
     $endpoint_message_name = $d['endpoint'] === 'addresses' ? substr($d['endpoint'], 0, -2) : $d['endpoint'] === 'categories' ? "category" :substr($d['endpoint'], 0, -1);
     $fields = implode(", ", $d['fields']);
-    $q = "SELECT " . $fields . " FROM " . $d['endpoint'] . " WHERE id = ". $d['endpoint_id'];
+    $where_queries = [];
+    $accepted_queries = [
+        "client",
+        "user"
+    ];
+    foreach ($GLOBALS['query_string'] as $query) {
+        $key = explode("=", $query)[0];
+        $val = explode("=", $query)[1];
+        if (in_array($key, $accepted_queries)) {
+            if (!empty($key) && !empty($val)) {
+                array_push($where_queries, $key . ' = ' . $val);
+            }
+        }
+    }
+
+    if (empty($where_queries)) {
+        $q = "SELECT " . $fields . " FROM " . $d['endpoint'] . " WHERE id = ". $d['endpoint_id'];
+    } else {
+        $q = "SELECT " . $fields . " FROM " . $d['endpoint'] . " WHERE id = ". $d['endpoint_id'] . " AND " . implode(" AND ", $where_queries);
+    }
     $res = $conn->query($q);
     if ($res->num_rows > 0) {
         header("Content-Type: application/json");
