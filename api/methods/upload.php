@@ -60,7 +60,7 @@ require("./core/password.php");
         $image_url = "'".$result['ObjectURL']."'";
         if (!empty($image_url)) {
             connect($image_url, function ($image_url, $conn) {
-                $user_id = $GLOBALS['original_post']['user_id'];
+                $user_id = $GLOBALS['endpoint_id'];
                 $q = "SELECT `id` FROM `users` WHERE `id` = ".$user_id;
                 $res = $conn->query($q);
                 if ($res->num_rows > 0) {
@@ -140,7 +140,7 @@ require("./core/password.php");
         $image_url = "'".$result['ObjectURL']."'";
         if (!empty($image_url)) {
             connect($image_url, function ($image_url, $conn) {
-                $client_id = $GLOBALS['original_post']['client_id'];
+                $client_id = $GLOBALS['endpoint_id'];
                 $q = "SELECT `id` FROM `clients` WHERE `id` = ".$client_id;
                 $res = $conn->query($q);
                 if ($res->num_rows > 0) {
