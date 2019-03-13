@@ -34,11 +34,6 @@
     ];
 
     connect($d, function ($d, $conn) {
-        $q = "SELECT `id` FROM `clients` WHERE `name` = '" . $d['data']['company_name'] . "'";
-        $res = $conn->query($q);
-        if ($res->num_rows > 0) {
-            response(409, "This company name is already in use.");
-        }
         $q = "SELECT `id` FROM `users` WHERE `email` = '" . $d['data']['email'] . "'";
         $res = $conn->query($q);
         if ($res->num_rows > 0) {

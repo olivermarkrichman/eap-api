@@ -33,6 +33,12 @@
         'venues'
     ];
 
+    if ($endpoint === "forgotpassword") {
+        require("core/email.php");
+        reset_password($_POST['email']);
+        return;
+    }
+
     if ($endpoint === "login") {
         require("methods/login.php");
         return;

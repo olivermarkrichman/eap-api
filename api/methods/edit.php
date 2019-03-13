@@ -2,7 +2,7 @@
 
 switch ($endpoint) {
     case 'clients':
-        $accepted_fields = ['name','owner','logo_img','colours'];
+        $accepted_fields = ['name','owner','logo_img','colour'];
         break;
 
     case 'events':
