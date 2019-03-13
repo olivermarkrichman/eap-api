@@ -2,12 +2,10 @@
     require("core/connect.php");
     require("core/utils.php");
 
-// TO DO LIST FOR EAP API:
-// - Change password
-// - MAIL SHIT
+    // TO DO LIST FOR EAP API:
+    // - Change password
+    // - MAIL SHIT
 
-
-    // $GLOBALS['original_post'] = $_POST;
     $headers = getallheaders();
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);
@@ -18,7 +16,14 @@
     $endpoint_id = array_key_exists(3, $urls) ? explode("?", $urls[3])[0] : null;
     $GLOBALS['query_string_array'] = explode("&", $query_string);
     $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
+    $GLOBALS['query_string'] = array();
     $GLOBALS['endpoint_id'] = $endpoint_id;
+
+    foreach ($GLOBALS['query_string_array'] as $query) {
+        if (!empty($query)) {
+            array_push($GLOBALS['query_string'], $query);
+        }
+    }
 
     $valid_endpoints = [
         'clients',
