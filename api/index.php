@@ -2,7 +2,12 @@
     require("core/connect.php");
     require("core/utils.php");
 
-    $GLOBALS['original_post'] = $_POST;
+// TO DO LIST FOR EAP API:
+// - Change password
+// - MAIL SHIT
+
+
+    // $GLOBALS['original_post'] = $_POST;
     $headers = getallheaders();
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);
@@ -13,6 +18,7 @@
     $endpoint_id = array_key_exists(3, $urls) ? explode("?", $urls[3])[0] : null;
     $GLOBALS['query_string_array'] = explode("&", $query_string);
     $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
+    $GLOBALS['endpoint_id'] = $endpoint_id;
 
     $valid_endpoints = [
         'clients',
@@ -48,6 +54,20 @@
                 response(400, "You need to send a current_client");
             }
             return;
+        }
+    }
+
+    if ($endpoint === "changepassword") {
+        if (!empty($endpoint_id)) {
+            if ($request === "put") {
+                require("methods/change-password.php");
+                change_password($endpoint_id);
+                return;
+            } else {
+                invalid_request();
+            }
+        } else {
+            invalid_request();
         }
     }
 

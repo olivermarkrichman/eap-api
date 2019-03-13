@@ -11,7 +11,7 @@ if (!empty($_POST)) {
     switch ($endpoint) {
         case 'clients':
             $required_fields = ['name','owner'];
-            $accepted_fields = ['name','owner','logo','colours'];
+            $accepted_fields = ['name','owner','logo_img','colours'];
             $check_fields = ['name', 'owner'];
             $requirements = ['date_added'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
