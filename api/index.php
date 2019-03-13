@@ -3,7 +3,6 @@
     require("core/utils.php");
 
     // TO DO LIST FOR EAP API:
-    // - Change password
     // - MAIL SHIT
 
     $headers = getallheaders();
