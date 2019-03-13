@@ -11,11 +11,10 @@ if (!empty($_POST)) {
     switch ($endpoint) {
         case 'clients':
             $required_fields = ['name','owner'];
-            $accepted_fields = ['name','owner','logo_img','colours'];
-            $check_fields = ['name', 'owner'];
+            $accepted_fields = ['name','owner','logo_img','colour'];
+            $check_fields = ['owner'];
             $requirements = ['date_added'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         case 'events':
@@ -24,7 +23,6 @@ if (!empty($_POST)) {
             $check_fields = ['name','venue','start_time'];
             $requirements = ['date_added'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         case 'incidents':
@@ -42,16 +40,14 @@ if (!empty($_POST)) {
             $check_fields = ['name'];
             $requirements = [];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         case 'users':
-            $required_fields = ['first_name','last_name','email','level'];
-            $accepted_fields = ['first_name','last_name','email','level'];
+            $required_fields = ['first_name','last_name','email','client','level'];
+            $accepted_fields = ['first_name','last_name','email','client','level'];
             $check_fields = ['email'];
             $requirements = ['date_added','token'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         case 'venues':
@@ -60,7 +56,6 @@ if (!empty($_POST)) {
             $check_fields = ['name','first_line','city','postcode'];
             $requirements = [];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         default:
@@ -88,9 +83,6 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
                 $fields[] = $accepted_field;
             }
         }
-        // if ($endpoint === 'users' && !$data['password']) {
-        //     response(409, "'password' cannot be blank.");
-        // }
         $fields = implode(", ", $fields);
 
         $d = [

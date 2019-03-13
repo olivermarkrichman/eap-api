@@ -3,7 +3,6 @@
     require("core/utils.php");
 
     // TO DO LIST FOR EAP API:
-    // - Change password
     // - MAIL SHIT
 
     $headers = getallheaders();
@@ -33,6 +32,12 @@
         'users',
         'venues'
     ];
+
+    if ($endpoint === "forgotpassword") {
+        require("core/email.php");
+        reset_password($_POST['email']);
+        return;
+    }
 
     if ($endpoint === "login") {
         require("methods/login.php");
