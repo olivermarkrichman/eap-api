@@ -1,9 +1,6 @@
 <?php
 
-if ($endpoint === 'users') {
-    //delete users.
-    //confirm password for any user.
-    //if deleteing user is owner of client then delete both
+if ($endpoint === 'account') {
     $d = [
         "user_id"=> $endpoint_id,
         "password"=> $_POST['confirm_password'],
