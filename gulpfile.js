@@ -26,6 +26,8 @@ function getFtpConnection() {
 		password: password
 	});
 }
+// scp -i ~/Desktop/amazon.pem ~/Desktop/MS115.fa  ubuntu@ec2-54-166-128-20.compute-1.amazonaws.com:~/data/
+// scp -i ~/eap/api/index.php ec2-user@ec2-18-130-241-198.eu-west-2.compute.amazonaws.com:~/var/www/html/
 
 gulp.task("ftp", function() {
 	var conn = getFtpConnection();
