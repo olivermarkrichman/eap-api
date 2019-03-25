@@ -34,13 +34,49 @@
     ];
 
     if ($endpoint === "forgotpassword") {
-        require("core/email.php");
-        reset_password($_POST['email']);
-        return;
+        if (!empty($_POST['email'])) {
+            require("core/email.php");
+            send_reset_password_email($_POST['email']);
+            return;
+        } else {
+            response(400, "Email address required");
+        }
+    }
+
+    if ($endpoint === "resetpassword") {
+        if (!empty($_POST['password']) && !empty($_POST['reset_code'])) {
+            require("methods/password-functions.php");
+            reset_password($_POST['password'], $_POST['reset_code']);
+            return;
+        } else {
+            response(400, "Password and reset code is required");
+        }
     }
 
     if ($endpoint === "login") {
         require("methods/login.php");
+        return;
+    }
+
+    if ($endpoint === "reset-codes") {
+        $d = [];
+        connect($d, function ($d, $conn) {
+            $q = "SELECT reset_code FROM passwords WHERE reset_code";
+            $res = $conn->query($q);
+            if ($res->num_rows > 0) {
+                $data = [];
+                while ($row = $res->fetch_assoc()['reset_code']) {
+                    if (!empty($row)) {
+                        array_push($data, $row);
+                    }
+                }
+                header("Content-Type: application/json");
+                echo json_encode($data);
+            } else {
+                header("Content-Type: application/json");
+                echo json_encode([]);
+            }
+        });
         return;
     }
 
@@ -70,7 +106,7 @@
     if ($endpoint === "changepassword") {
         if (!empty($endpoint_id)) {
             if ($request === "put") {
-                require("methods/change-password.php");
+                require("methods/password-functions.php");
                 change_password($endpoint_id);
                 return;
             } else {

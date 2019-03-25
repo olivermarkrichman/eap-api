@@ -9,7 +9,10 @@
     "progress-stream": "^2.0.0",
     "vinyl-ftp": "^0.6.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp-sftp-up4": "^0.1.8",
+    "pem": "^1.14.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
