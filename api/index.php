@@ -61,11 +61,32 @@
     if ($endpoint === "reset-codes") {
         $d = [];
         connect($d, function ($d, $conn) {
-            $q = "SELECT reset_code FROM passwords WHERE reset_code";
+            $q = "SELECT reset_code FROM passwords";
             $res = $conn->query($q);
             if ($res->num_rows > 0) {
                 $data = [];
                 while ($row = $res->fetch_assoc()['reset_code']) {
+                    if (!empty($row)) {
+                        array_push($data, $row);
+                    }
+                }
+                header("Content-Type: application/json");
+                echo json_encode($data);
+            } else {
+                header("Content-Type: application/json");
+                echo json_encode([]);
+            }
+        });
+        return;
+    }
+    if ($endpoint === "confirm-codes") {
+        $d = [];
+        connect($d, function ($d, $conn) {
+            $q = "SELECT confirm_code FROM users";
+            $res = $conn->query($q);
+            if ($res->num_rows > 0) {
+                $data = [];
+                while ($row = $res->fetch_assoc()['confirm_code']) {
                     if (!empty($row)) {
                         array_push($data, $row);
                     }
