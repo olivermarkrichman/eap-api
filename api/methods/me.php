@@ -7,8 +7,6 @@ function getMe()
         $q = "SELECT * FROM users WHERE token = ". $GLOBALS['token'];
         $res = $conn->query($q);
         if ($res->num_rows > 0) {
-            // header("Content-Type: application/json");
-            // echo json_encode($res->fetch_assoc());
             $user = $res->fetch_assoc();
             if ($user['client']) {
                 $q = "SELECT * FROM clients WHERE id = " . $user['client'];

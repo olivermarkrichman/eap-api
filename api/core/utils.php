@@ -32,7 +32,7 @@ function response($code, $message, $db_error = false, $data = false)
 
 function authorise($headers)
 {
-    $auth = $headers['Authorization'];
+    $auth = !empty($headers['Authorization']) ? $headers['Authorization'] : '';
     if (strpos($auth, "EAP") !== false) {
         $token = explode(" ", $auth);
         $token = "'".$token[1]."'";
@@ -67,4 +67,37 @@ function is_assoc_array($array)
 function generate_token()
 {
     return md5(uniqid());
+}
+
+if (!function_exists('getallheaders')) {
+    function getallheaders()
+    {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
+function clean($post)
+{
+    if ($post) {
+        $clean_post = [];
+        foreach ($post as $key => $value) {
+            $clean_post[sanitize($key)] = sanitize($value);
+        }
+        return $clean_post;
+    }
+}
+
+function sanitize($input)
+{
+    $input = htmlentities(trim(strip_tags(stripcslashes(htmlspecialchars($input)))));
+    require('password.php');
+    $conn = new mysqli("160.153.129.203", "eap-api", $password, "eap-db");
+    $input = $conn->real_escape_string($input);
+    return $input;
 }
