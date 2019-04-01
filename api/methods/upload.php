@@ -39,7 +39,7 @@ require("./core/password.php");
             $image_to_upload = $temp_file_location . '.' . $file_extension;
         }
 
-        require("../vendor/autoload.php");
+        require("vendor/autoload.php");
 
         $s3 = new Aws\S3\S3Client([
             'region'  => $bucket_region,
@@ -119,7 +119,7 @@ require("./core/password.php");
             $image_to_upload = $temp_file_location . '.' . $file_extension;
         }
 
-        require("../vendor/autoload.php");
+        require("vendor/autoload.php");
 
         $s3 = new Aws\S3\S3Client([
             'region'  => $bucket_region,

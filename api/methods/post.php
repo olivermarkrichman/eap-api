@@ -44,8 +44,8 @@ if (!empty($_POST)) {
 
         case 'users':
             $required_fields = ['first_name','last_name','email','client','level'];
-            $accepted_fields = ['first_name','last_name','email','client','level'];
-            $check_fields = ['email'];
+            $accepted_fields = ['first_name','last_name','email','client','level' ];
+            $check_fields = ['email','client'];
             $requirements = ['date_added','token'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
@@ -96,12 +96,12 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
         connect($d, function ($d, $conn) {
             $endpoint_message_name = $d['endpoint'] === 'addresses' ? substr($d['endpoint'], 0, -2) : $d['endpoint'] === 'categories' ? "category" :substr($d['endpoint'], 0, -1);
             $data = $d['data'];
-            $check_fields = "";
+            $check_fields = [];
             foreach ($d['check_fields'] as $check_field) {
-                $check_fields .= $check_field . " = " . $data[$check_field];
+                array_push($check_fields, $check_field . " = " . $data[$check_field]);
             }
             //Check item doesn't already already exist.
-            $q = "SELECT id FROM ".$d['endpoint']." WHERE " . $check_fields;
+            $q = "SELECT id FROM ".$d['endpoint']." WHERE " . implode(' AND ', $check_fields);
             $res = $conn->query($q);
             if ($res->num_rows > 0) {
                 response(409, "This " . $endpoint_message_name . " already exists.");
@@ -125,9 +125,17 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
                     $new_id = $conn->insert_id;
                     $q = "SELECT * FROM ".$d['endpoint']." WHERE id =" . $new_id;
                     $res = $conn->query($q);
-                    $GLOBALS['created_objects'][] = $res->fetch_assoc();
-
-                // require("mail.php");
+                    $new_user = $res->fetch_assoc();
+                    $GLOBALS['created_objects'][] = $new_user;
+                    if ($d['endpoint'] === 'users') {
+                        $q = "SELECT `name` FROM `clients` WHERE `id` = ". $new_user['client'];
+                        $res = $conn->query($q);
+                        if ($res->num_rows > 0) {
+                            $client_name = $res->fetch_assoc()['name'];
+                            require("./core/email.php");
+                            new_account_email($new_user['email'], $client_name);
+                        }
+                    }
                 } else {
                     response(500, "Failed to create " . $d['endpoint'] . ".", $conn->error);
                 }

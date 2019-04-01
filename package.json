@@ -1,26 +1,18 @@
 {
-  "name": "eap-api",
-  "version": "1.0.0",
-  "description": "EAP",
-  "main": "index.js",
-  "dependencies": {
-    "gulp": "^4.0.0",
-    "gulp-util": "^3.0.8",
-    "progress-stream": "^2.0.0",
-    "vinyl-ftp": "^0.6.1"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/olivermarkrichman/eap-api.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/olivermarkrichman/eap-api/issues"
-  },
-  "homepage": "https://github.com/olivermarkrichman/eap-api#readme"
+	"name": "eap-api",
+	"version": "1.0.0",
+	"description": "EAP",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/olivermarkrichman/eap-api.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"ec2-deploy": "^2.1.1"
+	}
 }

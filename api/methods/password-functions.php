@@ -35,3 +35,30 @@ function change_password($user_id)
         }
     }
 }
+
+function reset_password($password, $reset_code)
+{
+    if (!$password) {
+        response(400, "New Password is required");
+    } else {
+        $d = [
+                "password"=>$password,
+                "reset_code"=>$reset_code,
+            ];
+        connect($d, function ($d, $conn) {
+            $q = "SELECT `id` FROM `passwords` WHERE `reset_code` = '" . $d['reset_code'] . "'";
+            $res = $conn->query($q);
+            if ($res->num_rows > 0) {
+                $password_id = $res->fetch_assoc()['id'];
+                $q = "UPDATE `passwords` SET `reset_code` = NULL,`password` = '" . password_hash($d['password'], PASSWORD_DEFAULT) . "' WHERE `id` = ". $password_id;
+                if ($conn->query($q) === true) {
+                    response(200, "Password Reset!");
+                } else {
+                    response(500, "Failed to reset password", $conn->error);
+                }
+            } else {
+                response(404, "Invalid Reset Code");
+            }
+        });
+    }
+}
