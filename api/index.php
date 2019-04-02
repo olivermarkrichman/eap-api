@@ -4,7 +4,11 @@
     require("core/connect.php");
     require("core/utils.php");
 
-    // TO DO LIST FOR EAP API:
+    // header("Access-Control-Allow-Origin: *");
+    // header("Access-Control-Allow-Origin: http://eap.mezaria.com");
+    // header("Access-Control-Allow-Methods: *");
+    // header("Access-Control-Request-Methods: *");
+    // header("Access-Control-Allow-Headers: Authorization, Content-Type, Origin");
 
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);

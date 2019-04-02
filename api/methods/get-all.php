@@ -9,8 +9,9 @@ connect($d, function ($d, $conn) {
     $where_queries = [];
     $accepted_queries = [
         "client",
-        "user"
+        "user",
     ];
+    $toExpand = [];
     foreach ($GLOBALS['query_string'] as $query) {
         $key = explode("=", $query)[0];
         $val = explode("=", $query)[1];
@@ -18,6 +19,9 @@ connect($d, function ($d, $conn) {
             if (!empty($key) && !empty($val)) {
                 array_push($where_queries, $key . ' = ' . $val);
             }
+        }
+        if ($key === 'expand') {
+            array_push($toExpand, $val);
         }
     }
 
@@ -32,6 +36,16 @@ connect($d, function ($d, $conn) {
         $data = [];
         while ($row = $res->fetch_assoc()) {
             array_push($data, $row);
+        }
+        if (in_array('owner', $toExpand)) {
+            foreach ($data as $index => $client) {
+                $q = "SELECT " . implode(', ', $GLOBALS['get_fields']['users']) . " FROM users WHERE id = " . $client['owner'];
+                $res = $conn->query($q);
+                if ($res->num_rows > 0) {
+                    $client['owner'] = $res->fetch_assoc();
+                    $data[$index] = $client;
+                }
+            }
         }
         header("Content-Type: application/json");
         echo json_encode($data);

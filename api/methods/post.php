@@ -51,9 +51,9 @@ if (!empty($_POST)) {
             break;
 
         case 'venues':
-            $required_fields = ['name','first_line','city','postcode'];
-            $accepted_fields = ['name','first_line','second_line','city','county','postcode','contact_email','contact_number'];
-            $check_fields = ['name','first_line','city','postcode'];
+            $required_fields = ['name','first_line','city','postcode','client'];
+            $accepted_fields = ['name','first_line','second_line','city','county','postcode','contact_email','contact_number','client'];
+            $check_fields = ['name','first_line','city','postcode','client'];
             $requirements = [];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
@@ -117,7 +117,9 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
                 }
                 $values = [];
                 foreach ($data as $key => $value) {
-                    $values[] = $value;
+                    if (!empty($value)) {
+                        $values[] = $value;
+                    }
                 }
                 //Add new item
                 $q = "INSERT INTO " . $d['endpoint'] . " ( " . $d['fields'] . " ) VALUES ( " . implode(", ", $values) . " )";

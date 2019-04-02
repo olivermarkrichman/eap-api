@@ -4,7 +4,7 @@ function connect($d, $callback)
 {
     require("password.php");
     try {
-        $conn = new mysqli("160.153.129.203", "eap-api", $password, "eap-db");
+        $conn = new mysqli("eapdb.conrpivrbo5x.eu-west-2.rds.amazonaws.com", "eapuser", $password, "eapdb");
         $callback($d, $conn);
         $conn->close();
     } catch (PDOException $e) {
