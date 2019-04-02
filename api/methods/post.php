@@ -10,9 +10,10 @@ if (!empty($_POST)) {
 
     switch ($endpoint) {
         case 'clients':
+            getOwnerFromEmail();
             $required_fields = ['name','owner'];
-            $accepted_fields = ['name','owner','logo_img','colour'];
-            $check_fields = ['owner'];
+            $accepted_fields = ['name','owner','logo_img','colours'];
+            $check_fields = ['name','owner'];
             $requirements = ['date_added'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
@@ -152,4 +153,30 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
         response(500, "Failed to create " . $d['endpoint']);
     }
     $GLOBALS['created_objects'] = [];
+}
+
+function getOwnerFromEmail()
+{
+    foreach ($_POST as $index => $data) {
+        if ($data['email']) {
+            $d = [
+                'email'=> "'" . $data['email'] . "'",
+                'data'=> $data,
+                'index'=> $index
+            ];
+            connect($d, function ($d, $conn) {
+                $q = "SELECT id FROM users WHERE email = " . $d['email'];
+                $res = $conn->query($q);
+                if ($res->num_rows > 0) {
+                    $d['data']['owner'] = $res->fetch_assoc()['id'];
+                    unset($d['data']['email']);
+                    $_POST[$d['index']] = $d['data'];
+                } else {
+                    response(409, "This email doesn't exist");
+                }
+            });
+        } else {
+            response(400, "email can't be blank");
+        }
+    }
 }
