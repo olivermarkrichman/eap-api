@@ -13,6 +13,6 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"ec2-deploy": "^2.1.1"
+		"ec2-deploy": "^2.1.3"
 	}
 }
