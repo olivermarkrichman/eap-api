@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['get_fields'] = [
-    "clients" => ['id','name','owner','logo_img','colour'],
+    "clients" => ['id','name','owner','logo_img','colours','date_added'],
     "events" => ['id','name','venue','eap','start_time','end_time','away_team','notes'],
     "incidents" => ['id','name','required_skills','preferred_skills'],
     "skills" => ['id','name','description'],
