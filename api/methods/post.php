@@ -22,7 +22,7 @@ if (!empty($_POST)) {
             $required_fields = ['name','venue','start_time'];
             $accepted_fields = ['name','venue','eap','start_time','end_time','away_team','notes'];
             $check_fields = ['name','venue','start_time'];
-            $requirements = ['date_added'];
+            $requirements = ['date_added','created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
@@ -30,16 +30,15 @@ if (!empty($_POST)) {
             $required_fields = ['name'];
             $accepted_fields = ['name','required_skills','preferred_skills'];
             $check_fields = ['name'];
-            $requirements = ['date_added'];
+            $requirements = ['date_added','created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
-            // is_assoc_array($_POST) ? create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint) : create_one($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
         case 'skills':
-            $required_fields = ['name'];
-            $accepted_fields = ['name','description'];
-            $check_fields = ['name'];
-            $requirements = [];
+            $required_fields = ['name','client'];
+            $accepted_fields = ['name','description','client'];
+            $check_fields = ['name','client'];
+            $requirements = ['created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
@@ -47,7 +46,7 @@ if (!empty($_POST)) {
             $required_fields = ['first_name','last_name','email','client','level'];
             $accepted_fields = ['first_name','last_name','email','client','level' ];
             $check_fields = ['email','client'];
-            $requirements = ['date_added','token'];
+            $requirements = ['date_added','token','created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
@@ -55,7 +54,7 @@ if (!empty($_POST)) {
             $required_fields = ['name','first_line','city','postcode','client'];
             $accepted_fields = ['name','first_line','second_line','city','county','postcode','contact_email','contact_number','client'];
             $check_fields = ['name','first_line','city','postcode','client'];
-            $requirements = [];
+            $requirements = ['created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
@@ -91,7 +90,7 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
             "endpoint"=>$endpoint,
             "fields"=>$fields,
             "check_fields"=>$check_fields,
-            "requirements"=>$requirements
+            "requirements"=>$requirements,
         ];
 
         connect($d, function ($d, $conn) {
@@ -114,6 +113,13 @@ function create_multiple($required_fields, $accepted_fields, $check_fields, $req
                     }
                     if ($requirement === 'token') {
                         $data[$requirement] = "'" . generate_token() . "'";
+                    }
+                    if ($requirement === 'created_by') {
+                        $q = "SELECT id FROM users WHERE token = '" . get_token() . "'";
+                        $res = $conn->query($q);
+                        if ($res->num_rows > 0) {
+                            $data[$requirement] = "'" . $res->fetch_assoc()['id'] . "'";
+                        }
                     }
                 }
                 $values = [];

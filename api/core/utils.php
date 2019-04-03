@@ -2,11 +2,11 @@
 
 $GLOBALS['get_fields'] = [
     "clients" => ['id','name','owner','logo_img','colours','date_added'],
-    "events" => ['id','name','venue','eap','start_time','end_time','away_team','notes'],
-    "incidents" => ['id','name','required_skills','preferred_skills'],
-    "skills" => ['id','name','description'],
-    "users" => ['id','first_name','client','last_name','email','level','permissions','skills','profile_img','date_added'],
-    "venues" => ['id','name','first_line','second_line','city','county','postcode','contact_email','contact_number']
+    "events" => ['id','name','venue','eap','start_time','end_time','away_team','notes','created_by'],
+    "incidents" => ['id','name','required_skills','preferred_skills','created_by'],
+    "skills" => ['id','name','description','client','created_by'],
+    "users" => ['id','first_name','client','last_name','email','level','permissions','skills','profile_img','date_added','created_by'],
+    "venues" => ['id','name','first_line','second_line','city','county','postcode','contact_email','contact_number','created_by']
 ];
 
 function response($code, $message, $db_error = false, $data = false)
@@ -67,6 +67,19 @@ function is_assoc_array($array)
 function generate_token()
 {
     return md5(uniqid());
+}
+
+function get_token()
+{
+    $headers = $GLOBALS['headers'];
+    if (!empty($headers['Authorization'])) {
+        $auth = $headers['Authorization'];
+        $token = explode(" ", $auth);
+        $token = $token[1];
+        return $token;
+    } else {
+        response(401, 'No token');
+    }
 }
 
 if (!function_exists('getallheaders')) {

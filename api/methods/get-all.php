@@ -38,13 +38,26 @@ connect($d, function ($d, $conn) {
         while ($row = $res->fetch_assoc()) {
             array_push($data, $row);
         }
-        if (in_array('owner', $toExpand)) {
-            foreach ($data as $index => $client) {
+
+        foreach ($data as $index => $client) {
+            if (in_array('owner', $toExpand)) {
                 $q = "SELECT " . implode(', ', $GLOBALS['get_fields']['users']) . " FROM users WHERE id = " . $client['owner'];
                 $res = $conn->query($q);
                 if ($res->num_rows > 0) {
                     $client['owner'] = $res->fetch_assoc();
                     $data[$index] = $client;
+                }
+            }
+            if (in_array('created_by', $GLOBALS['get_fields'][$d['endpoint']])) {
+                if (empty($client['created_by'])) {
+                    unset($client['created_by']);
+                } else {
+                    $q = "SELECT id,first_name,last_name,profile_img FROM users WHERE id = " . $client['created_by'];
+                    $res = $conn->query($q);
+                    if ($res->num_rows > 0) {
+                        $client['created_by'] = $res->fetch_assoc();
+                        $data[$index] = $client;
+                    }
                 }
             }
         }

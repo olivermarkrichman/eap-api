@@ -14,6 +14,7 @@
     $_POST = json_decode($rest_json, true);
     $_POST = clean($_POST);
     $headers = getallheaders();
+    $GLOBALS['headers'] = $headers;
     $urls = explode("/", $_SERVER['REQUEST_URI']);
     $request = strtolower($_SERVER['REQUEST_METHOD']);
     $query_string = $_SERVER['QUERY_STRING'];
