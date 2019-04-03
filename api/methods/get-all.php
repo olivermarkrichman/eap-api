@@ -10,6 +10,7 @@ connect($d, function ($d, $conn) {
     $accepted_queries = [
         "client",
         "user",
+        "owner"
     ];
     $toExpand = [];
     foreach ($GLOBALS['query_string'] as $query) {
