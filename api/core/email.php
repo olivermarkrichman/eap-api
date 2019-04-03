@@ -54,13 +54,14 @@ function send_email($action, $recipient_emails, $subject, $plaintext_body, $html
 {
     require('password.php');
     $SesClient = SesClient::factory(array(
-  'version' => 'latest',
-  'region'  => 'us-west-2',
-  'credentials' => array(
-    'key' => $access_key_id,
-    'secret'  => $secret_access_key,
-  )
-));
+        'version' => 'latest',
+        'region'  => 'us-west-2',
+        'credentials' => array(
+            'key' => $access_key_id,
+            'secret'  => $secret_access_key,
+        )
+    ));
+
     $sender_email = '"Peap" <peap@mezaria.com>';
     $char_set = 'UTF-8';
 
@@ -111,7 +112,7 @@ function send_email($action, $recipient_emails, $subject, $plaintext_body, $html
                 if ($res->num_rows > 0) {
                     $q = "UPDATE `users` SET `confirm_code` = '" . $data['confirm_code'] . "' WHERE id = ".$res->fetch_assoc()['id'];
                     if ($conn->query($q)) {
-                        response(200, "Email Sent and confirm code added");
+                        // response(200, "Email Sent and confirm code added");
                     } else {
                         response(500, "email sent but failed to add confirm code", $q);
                     }

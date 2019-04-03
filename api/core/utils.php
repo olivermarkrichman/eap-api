@@ -97,7 +97,7 @@ function sanitize($input)
 {
     $input = htmlentities(trim(strip_tags(stripcslashes(htmlspecialchars($input)))));
     require('password.php');
-    $conn = new mysqli("160.153.129.203", "eap-api", $password, "eap-db");
+    $conn = new mysqli("eapdb.conrpivrbo5x.eu-west-2.rds.amazonaws.com", "eapuser", $password, "eapdb");
     $input = $conn->real_escape_string($input);
     return $input;
 }

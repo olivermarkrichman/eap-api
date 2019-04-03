@@ -13,7 +13,7 @@ if (!empty($_POST)) {
             getOwnerFromEmail();
             $required_fields = ['name','owner'];
             $accepted_fields = ['name','owner','logo_img','colours'];
-            $check_fields = ['name','owner'];
+            $check_fields = ['owner'];
             $requirements = ['date_added'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
