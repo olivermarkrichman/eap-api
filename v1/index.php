@@ -1,14 +1,12 @@
 <?php
+
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     require("core/connect.php");
     require("core/utils.php");
 
+    header("Access-Control-Allow-Origin: *");
     // header("Access-Control-Allow-Origin: *");
-    // header("Access-Control-Allow-Origin: http://eap.mezaria.com");
-    // header("Access-Control-Allow-Methods: *");
-    // header("Access-Control-Request-Methods: *");
-    // header("Access-Control-Allow-Headers: Authorization, Content-Type, Origin");
 
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);

@@ -33,12 +33,12 @@ connect($d, function ($d, $conn) {
     }
 
     $res = $conn->query($q);
+    // die($q);
     if ($res->num_rows > 0) {
         $data = [];
         while ($row = $res->fetch_assoc()) {
             array_push($data, $row);
         }
-
         foreach ($data as $index => $client) {
             if (in_array('owner', $toExpand)) {
                 $q = "SELECT " . implode(', ', $GLOBALS['get_fields']['users']) . " FROM users WHERE id = " . $client['owner'];

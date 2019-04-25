@@ -1,9 +1,9 @@
 const deployer = require('../../Desktop/web/npm_modules/ec2-deploy/index.js');
 deployer.setConfig({
-	host: '52.56.40.181',
-	username: 'deploy-api',
-	password: 'Smoke+Mirrors55',
-	remotePath: '../../var/www/html/eapi'
+	host: '54.224.84.234',
+	username: 'nginx',
+	password: '4n*E5cBzqYuTrT#',
+	remotePath: './eapi.mezaria.com'
 });
 
-deployer.autoDeploy('api/', true);
+deployer.autoDeploy('v1/');

@@ -1,0 +1,96 @@
+<?php
+
+if ($request === 'post') {
+    $data = $_POST;
+    $required_fields = ['first_name','last_name','email','password','company_name',"date_added","token"];
+    $fields = [];
+    $values = [];
+
+    $data["date_added"] = time();
+    $data["token"] = generate_token();
+    $data["level"] = 2;
+
+    foreach ($required_fields as $key) {
+        if (empty($data[$key])) {
+            response(400, $key . " is required");
+        } else {
+            if ($key === 'password' && strlen($data[$key]) < 8) {
+                response(400, "Password must be at least 8 characters long.");
+            }
+            if ($key !== 'company_name' && $key !== 'password') {
+                $fields[] = "`" . $key . "`";
+                if (gettype($data[$key]) === 'string') {
+                    $values[] = "'" . $data[$key] . "'";
+                } else {
+                    $values[] = $data[$key];
+                }
+            }
+        }
+    }
+
+    $d = [
+        "data"=>$data,
+        "fields"=>implode(", ", $fields),
+        "values"=>implode(", ", $values)
+    ];
+
+    connect($d, function ($d, $conn) {
+        $q = "SELECT `id` FROM `users` WHERE `email` = '" . $d['data']['email'] . "'";
+        $res = $conn->query($q);
+        if ($res->num_rows > 0) {
+            response(409, "This email address is already in use.");
+        }
+        $q = "INSERT INTO `users` ( " . $d['fields'] . " ) VALUES ( " . $d['values'] . " )";
+
+        if ($conn->query($q) === true) {
+            $new_id = $conn->insert_id;
+
+            //create client
+            $q = "INSERT INTO `clients` (`name`,`owner`) VALUES ('" . $d['data']['company_name'] . "', " . $new_id . ")";
+            if ($conn->query($q) === true) {
+                $client_id = $conn->insert_id;
+                $q = "UPDATE `users` SET `clients` = " . $client_id . " WHERE id = ".$new_id;
+                if ($conn->query($q)) {
+                    $created_client = true;
+                } else {
+                    response(500, "Failed to update user client", $conn->error);
+                }
+            } else {
+                response(500, "Failed to create client", $conn->error);
+            }
+
+            //create password
+            $q = "INSERT INTO `passwords` (`user_id`,`password`) VALUES (" . $new_id . ", '" . password_hash($d['data']['password'], PASSWORD_DEFAULT) . "')";
+            if ($conn->query($q) === true) {
+                $created_password = true;
+            } else {
+                response(500, "Failed to create password", $conn->error);
+            }
+
+            if ($created_client && $created_password) {
+                response(201, "Successfully created", false, [
+                    "token"=>$d['data']['token'],
+                    "client_id"=>$client_id
+                ]);
+            } else {
+                // echo $created_client . ' - ' . $created_password;
+                $error = 'Failed to create ';
+                if (!$created_client) {
+                    $error .= 'client';
+                }
+                if (!$created_password) {
+                    if (!$created_client) {
+                        $error .= ' and password';
+                    } else {
+                        $error .= 'password';
+                    }
+                }
+                response(500, $error, $conn->error);
+            }
+        } else {
+            response(500, "Failed to create user", $conn->error);
+        }
+    });
+} else {
+    response(403, 'This request method is not allowed.');
+}

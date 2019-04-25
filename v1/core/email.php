@@ -12,11 +12,11 @@ function send_reset_password_email($recipient)
             $reset_code = md5(uniqid());
             $recipient_emails = [$recipient];
             $subject = 'Peap: Reset Password Request';
-            $plaintext_body = "Looks like you've requested to reset your password! Follow this link to do so: http://eap.mezaria.com/password-reset/" . $reset_code;
+            $plaintext_body = "Looks like you've requested to reset your password! Follow this link to do so: https://peap.mezaria.com/password-reset/" . $reset_code;
             $html_body = '<h1>Want to Reset your password?</h1>';
             $html_body .= "<p>Looks like you've requested to reset your password!</p>";
-            $html_body .= "<p>Follow <a href='http://eap.mezaria.com/password-reset/" . $reset_code . "'>this link</a> to reset it</p>";
-            $html_body .= "<p>Or copy this link into your browser: http://eap.mezaria.com/password-reset/" . $reset_code . "</p>";
+            $html_body .= "<p>Follow <a href='https://peap.mezaria.com/password-reset/" . $reset_code . "'>this link</a> to reset it</p>";
+            $html_body .= "<p>Or copy this link into your browser: https://peap.mezaria.com/password-reset/" . $reset_code . "</p>";
             $data = [
                 'email'=> $recipient,
                 'reset_code' => $reset_code
@@ -39,10 +39,10 @@ function new_account_email($email, $client_name)
     $confirm_code = md5(uniqid());
     $recipient_emails = [$email];
     $subject = "Peap: You've been invited you to join ". $client_name . " on Peap!";
-    $plaintext_body = "You've been invited you to join ". $client_name . " on Peap! Follow this link to do so: http://eap.mezaria.com/register/" . $confirm_code;
+    $plaintext_body = "You've been invited you to join ". $client_name . " on Peap! Follow this link to do so: https://peap.mezaria.com/register/" . $confirm_code;
     $html_body = "<h1>You've been asked to join Peap</h1>";
-    $html_body .= "<p>Follow <a href='http://eap.mezaria.com/register/" . $confirm_code . "'>this link</a> to join</p>";
-    $html_body .= "<p>Or copy this link into your browser: http://eap.mezaria.com/register/" . $confirm_code . "</p>";
+    $html_body .= "<p>Follow <a href='https://peap.mezaria.com/register/" . $confirm_code . "'>this link</a> to join</p>";
+    $html_body .= "<p>Or copy this link into your browser: https://peap.mezaria.com/register/" . $confirm_code . "</p>";
     $data = [
                 'email'=> $email,
                 'confirm_code' => $confirm_code

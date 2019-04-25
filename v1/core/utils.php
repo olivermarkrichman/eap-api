@@ -11,8 +11,7 @@ $GLOBALS['get_fields'] = [
 
 function response($code, $message, $db_error = false, $data = false)
 {
-    require("http-codes.php");
-    header("HTTP/1.0 " . $code . " " . $http_codes[$code]);
+    http_response_code($code);
     header("Content-Type: application/json");
     $response = [
         'code'=>$code,
@@ -35,15 +34,19 @@ function authorise($headers)
     $auth = !empty($headers['Authorization']) ? $headers['Authorization'] : '';
     if (strpos($auth, "EAP") !== false) {
         $token = explode(" ", $auth);
-        $token = "'".$token[1]."'";
-        connect($token, function ($token, $conn) {
-            $q = "SELECT `id` FROM `users` WHERE `token` = ".$token;
-            $res = $conn->query($q);
-            $GLOBALS['token'] = $token;
-            if (!$res->fetch_assoc()['id']) {
-                response(401, "Invalid Token");
-            }
-        });
+        $token = !empty($token[1]) ? '"'.$token[1].'"' : '';
+        if (!empty($token)) {
+            connect($token, function ($token, $conn) {
+                $q = "SELECT `id` FROM `users` WHERE `token` = ".$token;
+                $res = $conn->query($q);
+                $GLOBALS['token'] = $token;
+                if (!$res->fetch_assoc()['id']) {
+                    response(401, "Invalid Token");
+                }
+            });
+        } else {
+            response(401, "Invalid Token");
+        }
     } else {
         response(401, "Invalid Token");
     }
@@ -109,8 +112,11 @@ function clean($post)
 function sanitize($input)
 {
     $input = htmlentities(trim(strip_tags(stripcslashes(htmlspecialchars($input)))));
-    require('password.php');
-    $conn = new mysqli("eapdb.conrpivrbo5x.eu-west-2.rds.amazonaws.com", "eapuser", $password, "eapdb");
+    require("password.php");
+    $host = "peap-database.chzh3jub5r2w.us-east-1.rds.amazonaws.com";
+    $user = "peap_user";
+    $db_name = "peap_database";
+    $conn = new mysqli($host, $user, $password, $db_name);
     $input = $conn->real_escape_string($input);
     return $input;
 }
