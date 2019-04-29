@@ -1,4 +1,8 @@
 /node_modules
-/api/core/password.php
-/api/vendor
 /.DS_Store
+
+/v1/core/password.php
+/v1/vendor
+
+/v2/core/password.php
+/v2/vendor
