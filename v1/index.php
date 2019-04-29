@@ -1,7 +1,9 @@
 <?php
 
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+    // php_flag[display_errors] = on
+    // php_flag[display_startup_errors] = on
     require("core/connect.php");
     require("core/utils.php");
 
@@ -19,7 +21,8 @@
     $endpoint = array_key_exists(1, $urls) ? explode("?", $urls[1])[0] : null;
     $endpoint_id = array_key_exists(2, $urls) ? explode("?", $urls[2])[0] : null;
     $GLOBALS['query_string_array'] = explode("&", $query_string);
-    $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
+        // print_r($GLOBALS['query_string_array']);
+    // $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
     $GLOBALS['query_string'] = array();
     $GLOBALS['endpoint_id'] = $endpoint_id;
 
@@ -118,6 +121,12 @@
     }
 
     authorise($headers);
+
+	if ($endpoint === 'eaps'){
+		require("methods/eaps.php");
+		process($request,$endpoint_id);
+		return;
+	}
 
     if ($endpoint === "me") {
         if ($request === "get") {
