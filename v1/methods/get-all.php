@@ -32,8 +32,11 @@ connect($d, function ($d, $conn) {
         $q = "SELECT " . $fields . " FROM " . $d['endpoint'] . " WHERE " . implode(" AND ", $where_queries);
     }
 
+	if ($d['endpoint'] === 'events'){
+		$q .= " ORDER BY start_time DESC";
+	}
+
     $res = $conn->query($q);
-    // die($q);
     if ($res->num_rows > 0) {
         $data = [];
         while ($row = $res->fetch_assoc()) {
@@ -58,6 +61,16 @@ connect($d, function ($d, $conn) {
                         $client['created_by'] = $res->fetch_assoc();
                         $data[$index] = $client;
                     }
+                }
+            }
+        }
+        foreach ($data as $index => $event) {
+            if (in_array('venue', $toExpand)) {
+                $q = "SELECT `id`,`name` FROM venues WHERE id = " . $event['venue'];
+                $res = $conn->query($q);
+                if ($res->num_rows > 0) {
+                    $event['venue'] = $res->fetch_assoc();
+                    $data[$index] = $event;
                 }
             }
         }

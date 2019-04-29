@@ -19,9 +19,9 @@ if (!empty($_POST)) {
             break;
 
         case 'events':
-            $required_fields = ['name','venue','start_time'];
-            $accepted_fields = ['name','venue','eap','start_time','end_time','away_team','notes'];
-            $check_fields = ['name','venue','start_time'];
+            $required_fields = ['name','venue','start_time','client'];
+            $accepted_fields = ['name','venue','eap','start_time','end_time','away_team','notes','client'];
+            $check_fields = ['name','venue','start_time','client'];
             $requirements = ['date_added','created_by'];
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
