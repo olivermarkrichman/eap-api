@@ -6,7 +6,8 @@ $GLOBALS['get_fields'] = [
     "incidents" => ['id','name','required_skills','preferred_skills','created_by'],
     "skills" => ['id','name','description','client','created_by'],
     "users" => ['id','first_name','client','last_name','email','level','permissions','skills','profile_img','date_added','created_by'],
-    "venues" => ['id','name','first_line','second_line','city','county','postcode','contact_email','contact_number','created_by']
+    "venues" => ['id','name','first_line','second_line','city','county','postcode','contact_email','contact_number','created_by'],
+	"eaps" => ['id','name','events','users','skills']
 ];
 
 function response($code, $message, $db_error = false, $data = false)

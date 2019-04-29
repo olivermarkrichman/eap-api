@@ -58,6 +58,14 @@ if (!empty($_POST)) {
             create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
             break;
 
+        case 'eaps':
+            $required_fields = ['name','client'];
+            $accepted_fields = ['name','events','users','skills','client'];
+            $check_fields = ['name','client'];
+            $requirements = ['date_added','created_by'];
+            create_multiple($required_fields, $accepted_fields, $check_fields, $requirements, $endpoint);
+            break;
+
         default:
             invalid_request();
             break;
