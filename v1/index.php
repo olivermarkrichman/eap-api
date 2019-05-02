@@ -1,14 +1,12 @@
 <?php
 
-    // ini_set('display_errors', 1);
-    // error_reporting(E_ALL);
-    // php_flag[display_errors] = on
-    // php_flag[display_startup_errors] = on
     require("core/connect.php");
     require("core/utils.php");
 
     header("Access-Control-Allow-Origin: *");
-    // header("Access-Control-Allow-Origin: *");
+
+	// print_r($_SERVER);
+	// die();
 
     $rest_json = file_get_contents("php://input");
     $_POST = json_decode($rest_json, true);
@@ -21,8 +19,6 @@
     $endpoint = array_key_exists(1, $urls) ? explode("?", $urls[1])[0] : null;
     $endpoint_id = array_key_exists(2, $urls) ? explode("?", $urls[2])[0] : null;
     $GLOBALS['query_string_array'] = explode("&", $query_string);
-        // print_r($GLOBALS['query_string_array']);
-    // $GLOBALS['query_string_array'][0] = substr($GLOBALS['query_string_array'][0], 1);
     $GLOBALS['query_string'] = array();
     $GLOBALS['endpoint_id'] = $endpoint_id;
 
@@ -38,7 +34,8 @@
         'incidents',
         'skills',
         'users',
-        'venues'
+        'venues',
+		'eaps'
     ];
 
     if ($endpoint === "forgotpassword") {
@@ -121,12 +118,6 @@
     }
 
     authorise($headers);
-
-	if ($endpoint === 'eaps'){
-		require("methods/eaps.php");
-		process($request,$endpoint_id);
-		return;
-	}
 
     if ($endpoint === "me") {
         if ($request === "get") {
