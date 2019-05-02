@@ -87,16 +87,16 @@
     if ($endpoint === "confirm-codes") {
         $d = [];
         connect($d, function ($d, $conn) {
-            $q = "SELECT confirm_code FROM users";
+            $q = "SELECT `confirm_code` FROM `users`";
             $res = $conn->query($q);
             if ($res->num_rows > 0) {
-                $codes = $res->fetch_assoc();
-                $data = [];
-                foreach ($res->fetch_assoc() as $key => $value) {
-                    if (!empty($value)) {
-                        array_push($data, $value);
-                    }
-                }
+				$data = [];
+				while ($row = $res->fetch_assoc()) {
+					$code = $row['confirm_code'];
+					if ($code){
+			        	array_push($data, $code);
+					}
+		        }
                 header("Content-Type: application/json");
                 echo json_encode($data);
             } else {
